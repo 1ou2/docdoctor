@@ -11,3 +11,9 @@ edit .env file with credentials
 AZURE_OPENAI_KEY="abcdef"
 AZURE_OPENAI_ENDPOINT="https://my.domain.com/"
 ```
+
+# External links
+https://cookbook.openai.com/examples/question_answering_using_embeddings
+
+# sample data
+embeddings_path = "https://cdn.openai.com/API/examples/data/winter_olympics_2022.csv"
