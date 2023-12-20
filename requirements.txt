@@ -3,3 +3,4 @@ python-dotenv
 pandas
 tiktoken
 scipy
+pypdf
