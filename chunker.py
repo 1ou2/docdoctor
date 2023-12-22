@@ -1,8 +1,14 @@
-import pypdf
-import os,argparse, shutil,glob
+import os,argparse, glob
 from pypdf import PdfReader
 import tiktoken
 import pandas as pd
+
+#
+# Create chunks of text from an input directory
+# 
+#
+
+
 
 def extract(pdfname):
     reader = PdfReader(pdfname)
@@ -56,22 +62,6 @@ def create_chunks(f, pages,outputdir,chunkdir):
             else:
                 raise Exception(f"max tokens exceeded - page too long - file: {textname} - page: {chk_id}")
 
-def create_data(chunkdir):
-    data = []
-    files = sorted(glob.glob(chunkdir+"/*.txt"))
-    for f in files:
-        # remove path, and remove extension
-        bname = str(os.path.basename(f))[:-4]
-        (fname,chk_id) = bname.split("-chk-")
-        print(f"fname {fname} chunk id {chk_id}")
-        with open(f,"r",encoding="utf-8") as t:
-            text = t.read()
-
-        tokens = num_tokens_from_string(text,"cl100k_base")
-            
-        row = {"file":fname,"chunk_id":chk_id,"text":text,"embedding":"n/a","tokens":tokens}
-        data.append(row)
-    return data
 
 if __name__ == "__main__":
 
@@ -94,10 +84,3 @@ if __name__ == "__main__":
         pages = extract(f)
         create_chunks(f,pages,outputdir,chunkdir)
     
-    """
-    data=(create_data(chunkdir))
-    df = pd.DataFrame(data)
-    print(df)
-    df.to_csv(chunkdir+".csv")
-    df.to_json(chunkdir+".json")
-    """
