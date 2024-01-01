@@ -4,3 +4,8 @@ pandas
 tiktoken
 scipy
 pypdf
+fastapi
+uvicorn
+gunicorn
+jinja2
+python-multipart
