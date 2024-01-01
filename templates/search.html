@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href={{ url_for('static', path='/techstyle.css') }}>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Search</title>
+</head>
+<body>
+    <header>
+        <div class="container">
+          <h1>Docdoctor your document assistant</h1>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+          <a href="#" class="nav-link">Home</a>
+          <a href="#" class="nav-link">About</a>
+          <a href="#" class="nav-link">Services</a>
+          <a href="#" class="nav-link">Contact</a>
+        </div>
+    </nav>
+    <div class="container main-content">
+        <h2>Search</h2>
+        <p>This is a sample text for your main content. You can provide information about your tech-related services, products, or any other relevant content here.</p>
+        <form method="post" action="/search">
+            <label>
+                Text ID : <input type="number" name="text_id" id="text_id"/>
+            </label>
+            <label>
+                Text :
+                <input type="text" name="text" id="text"/>
+            </label>
+            
+            <input type="submit">
+        </form>
+        <p>Result: {{ data }}</p>
+    </div>
+    <!-- Include JavaScript -->
+  <script>
+    document.getElementById('apiForm').addEventListener('submit', function (event) {
+      event.preventDefault(); // Prevent the default form submission
+
+      // Collect form data
+      const textId = document.getElementById('text_id').value;
+      const searchText = document.getElementById('search').value;
+
+      // Construct the request
+      const apiUrl = 'https://example.com/api'; // Replace with your API endpoint
+      const requestData = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text_id: textId,
+          search: searchText,
+        }),
+      };
+
+      // Make the request
+      fetch(apiUrl, requestData)
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response data as needed
+          console.log('Response:', data);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    });
+  </script>
+</body>
+</html>
