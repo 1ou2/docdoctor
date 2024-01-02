@@ -70,15 +70,15 @@ class EmbeddingDB:
         self.df = pd.DataFrame(data)
         return data
     
-    def write(self,format="json"):
+    def write(self,filename:str):
         if self.df is None:
             raise Exception("No data. Cannot write to disk.")
-        if format == "csv":
-            self.df.to_csv(chunkdir+".csv")
-        elif format == "json":
-            self.df.to_json(chunkdir+".json")
+        if filename.endswith("csv"):
+            self.df.to_csv(filename)
+        elif filename.endswith("json"):
+            self.df.to_json(filename)
         else:
-            raise Exception(f"unknown format {format}")
+            raise Exception(f"unknown format {filename}")
         
     def read(self,filename:str):
         if filename.endswith(".json"):
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     
     if args.load:
         edb.load(loaddir)
-        edb.write(format="json")
+        edb.write(loaddir +".json")
     elif args.read:
         edb.read(datafile)
         for i in range (3,10):
