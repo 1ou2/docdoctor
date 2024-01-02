@@ -1,1 +1,1 @@
-gunicorn --bind:0.0.0.0 --timeout 600 app.server:app
+uvicorn app.server:app --host 0.0.0.0 --port 80

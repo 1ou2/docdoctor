@@ -1,6 +1,7 @@
 # Setup python environment
-```python3 -m venv openai-env
-source openai-env/bin/activate
+```
+python3 -m venv .venv
+source .venv/env/bin/activate
 pip install -r requirements.txt
 ```
 For openai ```openai python-dotenv tiktoken```
@@ -30,8 +31,8 @@ Initial setup on azure :
 2. create a service principal, with ```azure-init-principal.sh``` script
 3. create blob storage for static website 
 ```
-chmod a+x azure-init-front.sh 
-./deploy-azure.sh
+chmod a+x azure-*.sh 
+./azure-init-front.sh
 ```
 Documentation 
 - https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-static-website-how-to?tabs=azure-cli
