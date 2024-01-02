@@ -9,7 +9,7 @@ az appservice plan create \
    --resource-group $AZ_RESOURCEGROUP \
    --name $AZ_SERVICE_PLAN \
    --is-linux
-az webapp list-runtimes --linux
+
 echo "creating webapp $AZ_WEBAPP_NAME"
 az webapp create \
     --name $AZ_WEBAPP_NAME \
