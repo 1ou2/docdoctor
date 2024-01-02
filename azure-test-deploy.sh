@@ -1,7 +1,7 @@
 source azure.env
 
 # prepare packages
-FILES="requirements.txt tserver templates static .deployment startup.sh "
+FILES="requirements.txt tserver/server.py templates static .deployment startup.sh prebuild.sh postbuild.sh"
 rm -rf dist
 mkdir dist
 cp -r $FILES dist
@@ -14,6 +14,7 @@ az account set --subscription $AZ_SUBSCRIPTION
 echo "****"
 echo "webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path src.zip"
 echo "***"
+az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
 az webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path "src.zip"
 echo "set startup file"
 az webapp config set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --startup-file "startup.sh"
