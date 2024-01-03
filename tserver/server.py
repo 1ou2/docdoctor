@@ -9,8 +9,6 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 
-db = EmbeddingDB()
-db.read("chk.json")
 app = FastAPI()
 
 origins = [
@@ -31,7 +29,15 @@ app.add_middleware(
 # authenticate API
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+class User(BaseModel):
+    username: str
+    email: str | None = None
+    full_name: str | None = None
+    disabled: bool | None = None
 
+class Text(BaseModel):
+    id: int
+    data: str | None = None
 
 # templates directory
 templates = Jinja2Templates(directory="templates")
@@ -43,10 +49,15 @@ async def admin(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"token": token}
 
 # Test page
+@app.get("/test/")
+async def test():
+    return {"hello":"world"}
+
+# Test page
 @app.get("/", response_class=HTMLResponse)
-async def home(request: Request,qr:str):
+async def home(request: Request):
     data = {
-        "page": "Home page: hello!" +qr
+        "page": "Home page: hello!"
     }
     return templates.TemplateResponse("page.html", {"request": request, "data": data})
 
