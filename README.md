@@ -60,3 +60,8 @@ az webapp config set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME -
 az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
 az webapp config set --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP --startup-file "python -m uvicorn app.server:app --host 0.0.0.0"
 ```
+
+## Secrets
+Secrets are stored in Azure Keyvault.
+To set a secret, go the webapp>configuration>application settings and create a new entry.
+Secrets are retreivde using environment variables ```os.getenv["app_setting_name"]```
