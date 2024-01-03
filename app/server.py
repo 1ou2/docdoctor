@@ -7,7 +7,8 @@ from app.embeddingDB import EmbeddingDB
 from typing import Annotated
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
-
+from dotenv import load_dotenv
+import os
 
 db = EmbeddingDB(init_openai=False)
 db.read("chk.json")
@@ -36,6 +37,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 @app.get("/admin/")
 async def admin(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"token": token}
+
+@app.get("/secret/")
+async def secret():
+    load_dotenv()
+    secret=os.getenv("testsecret")
+    return {
+        "page": f"This is my secret -- {secret} --" 
+    }
 
 # Test page
 @app.get("/")
