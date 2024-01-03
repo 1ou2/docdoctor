@@ -39,7 +39,7 @@ Documentation
 - https://learn.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-cli
 
 # back-end server
-## RUN
+## RUN Locally
 From terminal ```uvicorn app.server:app --reload```
 - uvicorn : ASGI 
 - app.server : server.py python module located in app directory
@@ -47,3 +47,16 @@ From terminal ```uvicorn app.server:app --reload```
 - --reload : only in development mode
 Server can be accessed 
 http://127.0.0.1:8000
+
+## Azure deployment
+Check logs ```az webapp log tail --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP ```
+FastAPI deployment in a webapp is tricky because :
+- Python 3.10 minimum is required
+- By default, only Flask and Django are supported. The startup process launches gunicorn, and for FastAPI uvicorn is needed.
+
+Hence, the following commands must be used :
+```
+az webapp config set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --linux-fx-version "PYTHON|3.12"
+az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+az webapp config set --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP --startup-file "python -m uvicorn app.server:app --host 0.0.0.0"
+```

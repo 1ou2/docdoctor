@@ -19,4 +19,12 @@ az webapp create \
 
 echo "setting python 3.12"
 az webapp config set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --linux-fx-version "PYTHON|3.12"
+az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+az webapp config set --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP --startup-file "python -m uvicorn app.server:app --host 0.0.0.0"
 
+
+#az webapp restart --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP
+
+#echo "creating keyvault"
+#az keyvault create --resource-group $AZ_RESOURCEGROUP --location $AZ_LOCATION --name $AZ_KEYVAULT
+#az webapp identity assign --resource-group $AZ_RESOURCEGROUP  --name $AZ_WEBAPP_NAME
