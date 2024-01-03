@@ -12,10 +12,20 @@ echo "login using service principal"
 az login --service-principal --username $AZ_SERVICEPRINCIPAL_APPID --password $AZ_SERVICEPRINCIPAL_PASSWORD --tenant $AZ_TENANTID
 az account set --subscription $AZ_SUBSCRIPTION
 echo "****"
-echo "webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path src.zip"
+
+az webapp config connection-string list --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME > settings.json 
 echo "***"
-az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
-az webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path "src.zip"
+echo "set config SCM_DO_BUILD_DURING_DEPLOYMENT = true"
+az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings "@appsettings.json"
+
+#az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --settings SCM_DO_BUILD_DURING_DEPLOYMENT=true
+#az webapp config appsettings set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --startup-file "startup.sh"
+#echo "deploy"
+#echo "webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path src.zip"
+#az webapp deploy --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --src-path "src.zip"
 echo "set startup file"
 az webapp config set --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME --startup-file "startup.sh"
-az webapp restart --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP
+#az webapp restart --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP
+
+echo "list config appsettings"
+az webapp config appsettings list --resource-group $AZ_RESOURCEGROUP --name $AZ_WEBAPP_NAME

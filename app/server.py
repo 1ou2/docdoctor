@@ -31,15 +31,7 @@ app.add_middleware(
 # authenticate API
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-class User(BaseModel):
-    username: str
-    email: str | None = None
-    full_name: str | None = None
-    disabled: bool | None = None
 
-class Text(BaseModel):
-    id: int
-    data: str | None = None
 
 # templates directory
 templates = Jinja2Templates(directory="templates")
