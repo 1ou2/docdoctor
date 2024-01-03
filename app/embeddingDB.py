@@ -23,22 +23,25 @@ import numpy as np
 # - create a EmbeddingDB class
 
 class EmbeddingDB:
-    def __init__(self) -> None:
+    def __init__(self,init_openai=False) -> None:
         # openai client
         self.client = None
         # directory where text chunks are located
         self.chunkdir = None
         # dataframe
         self.df = None
-        self.init_openai()
+        self.init_openai(init_openai)
 
-    def init_openai(self):
+    def init_openai(self,init):
         load_dotenv()
-        self.client = AzureOpenAI(
-            api_key = os.getenv("AZURE_OPENAI_KEY"),  
-            api_version = "2023-05-15",
-            azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        )
+        if init:
+            self.client = AzureOpenAI(
+                api_key = os.getenv("AZURE_OPENAI_KEY"),  
+                api_version = "2023-05-15",
+                azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+            )
+        else:
+            self.client = False
 
     def num_tokens_from_string(self,string: str, encoding_name: str) -> int:
         """Returns the number of tokens in a text string."""
@@ -70,15 +73,15 @@ class EmbeddingDB:
         self.df = pd.DataFrame(data)
         return data
     
-    def write(self,format="json"):
+    def write(self,filename:str):
         if self.df is None:
             raise Exception("No data. Cannot write to disk.")
-        if format == "csv":
-            self.df.to_csv(chunkdir+".csv")
-        elif format == "json":
-            self.df.to_json(chunkdir+".json")
+        if filename.endswith("csv"):
+            self.df.to_csv(filename)
+        elif filename.endswith("json"):
+            self.df.to_json(filename)
         else:
-            raise Exception(f"unknown format {format}")
+            raise Exception(f"unknown format {filename}")
         
     def read(self,filename:str):
         if filename.endswith(".json"):
@@ -109,11 +112,11 @@ if __name__ == "__main__":
     loaddir = args.load
     datafile = args.read
     
-    edb = EmbeddingDB()
+    edb = EmbeddingDB(False)
     
     if args.load:
         edb.load(loaddir)
-        edb.write(format="json")
+        edb.write(loaddir +".json")
     elif args.read:
         edb.read(datafile)
         for i in range (3,10):

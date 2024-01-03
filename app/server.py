@@ -1,5 +1,5 @@
 from fastapi import FastAPI,Request,Form,Depends
-from fastapi.responses import HTMLResponse
+
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 
-db = EmbeddingDB()
+db = EmbeddingDB(init_openai=False)
 db.read("chk.json")
 app = FastAPI()
 
@@ -33,35 +33,21 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 
-# templates directory
-templates = Jinja2Templates(directory="templates")
-# static files : css, img
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
 @app.get("/admin/")
 async def admin(token: Annotated[str, Depends(oauth2_scheme)]):
     return {"token": token}
 
 # Test page
-@app.get("/", response_class=HTMLResponse)
-async def home(request: Request,qr:str):
-    data = {
-        "page": "Home page: hello!" +qr
+@app.get("/")
+async def home():
+    return {
+        "page": "Home page: hello!" 
     }
-    return templates.TemplateResponse("page.html", {"request": request, "data": data})
-
-
-@app.get("/search", response_class=HTMLResponse)
-async def search(request: Request):
-    data = {
-        "page": "no results"
-    }
-    return templates.TemplateResponse("search.html", {"request": request, "data": data})
 
 
 @app.post("/login/")
 async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
-    return {"username": username}
+    return {"username": username, "password":password}
 
 @app.get("/v1.0/text/")
 async def read_text(text_id: int):
@@ -71,16 +57,4 @@ async def read_text(text_id: int):
 async def read_text(text_id: int):
     return {"id":text_id,"text": db.get_text(text_id)}
 
-@app.post("/ptext/")
-async def read_ptext(text_id: int):
-    return {"text_id": db.get_text(text_id)}
 
-@app.post("/search", response_class=HTMLResponse)
-async def search_text(request: Request,text_id: Annotated[int, Form()]):
-    return templates.TemplateResponse("search.html", {"request": request, "data": db.get_text(text_id)})
-
-
-
-#@app.get("/filter/{embedding}")
-#async def filter(embedding: list):
-#    return {"filter": db.filter(embedding)}

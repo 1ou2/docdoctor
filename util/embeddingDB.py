@@ -23,22 +23,25 @@ import numpy as np
 # - create a EmbeddingDB class
 
 class EmbeddingDB:
-    def __init__(self) -> None:
+    def __init__(self,init_openai=False) -> None:
         # openai client
         self.client = None
         # directory where text chunks are located
         self.chunkdir = None
         # dataframe
         self.df = None
-        self.init_openai()
+        self.init_openai(init_openai)
 
-    def init_openai(self):
+    def init_openai(self,init):
         load_dotenv()
-        self.client = AzureOpenAI(
-            api_key = os.getenv("AZURE_OPENAI_KEY"),  
-            api_version = "2023-05-15",
-            azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
-        )
+        if init:
+            self.client = AzureOpenAI(
+                api_key = os.getenv("AZURE_OPENAI_KEY"),  
+                api_version = "2023-05-15",
+                azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT")
+            )
+        else:
+            self.client = False
 
     def num_tokens_from_string(self,string: str, encoding_name: str) -> int:
         """Returns the number of tokens in a text string."""
@@ -109,7 +112,7 @@ if __name__ == "__main__":
     loaddir = args.load
     datafile = args.read
     
-    edb = EmbeddingDB()
+    edb = EmbeddingDB(False)
     
     if args.load:
         edb.load(loaddir)
