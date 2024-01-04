@@ -65,3 +65,18 @@ az webapp config set --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP -
 Secrets are stored in Azure Keyvault.
 To set a secret, go the webapp>configuration>application settings and create a new entry.
 Secrets are retreivde using environment variables ```os.getenv["app_setting_name"]```
+
+# Frontend server
+# local storage
+Local storage is used to store the authentication bearer
+```
+// Store data
+var someData = 'The data that I want to store for later.';
+localStorage.setItem('myDataKey', someData);
+
+// Get data
+var data = localStorage.getItem('myDataKey');
+
+// Remove data
+localStorage.removeItem('myDatakey');
+```
