@@ -1,2 +1,0 @@
-source azure.env
-az ad sp create-for-rbac --name $AZ_SERVICEPRINCIPAL_GITHUB_NAME --role contributor --scopes /subscriptions/AZ_SUBSCRIPTION/resourceGroups/AZ_RESOURCEGROUP/providers/Microsoft.Web/sites/$AZ_SERVICEPRINCIPAL_GITHUB_NAME --json-auth

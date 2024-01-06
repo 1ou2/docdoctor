@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="techstyle.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <title>Your Tech Website</title>
+  <title>Doc Doctor</title>
+  <script language="javascript" type="text/javascript" src="script.js"></script>
   <style>
     /* Add a new style block for additional styling */
     .form-container {
@@ -83,10 +84,33 @@
 
   <footer>
     <div class="container">
-      <p>&copy; 2023 Your Tech Website. All rights reserved.</p>
+      <p>&copy; 2024 Doctor Your doc assistant. All rights reserved.</p>
+      <div id="bearer">
+        <script type="text/javascript">
+          var bearer = localStorage.getItem('bearer');
+          bearercontainer = document.getElementById('bearer');
+          if (bearer === null || bearer.length == 0) {
+            bearercontainer.textContent = "Bearer - Not set";
+            bearercontainer.innerHTML += "<form id='bearerform'><input type = 'text' id='newbearer'></form>";
+          }
+          else {
+            bearercontainer.textContent = "Bearer is set " ;          
+          }
+       </script>
+      </div>
     </div>
   </footer>
-
+  <script>
+    document.getElementById('bearerform').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const bearerid = document.getElementById('newbearer').value;
+      console.log("new bearer "+ bearerid);
+      localStorage.setItem('bearer',bearerid);
+      
+    });
+  </script>
+            
+  </script>
   <!-- Include JavaScript -->
   <script>
     // Function to handle the Text ID form submission (POST request)
@@ -95,11 +119,15 @@
 
       const textId = document.getElementById('text_id').value;
 
-      const apiUrl = `http://127.0.0.1:8000/v1.0/text/${encodeURIComponent(textId)}`;
+      const apiUrl = `http://127.0.0.1:8012/v1.0/text/${encodeURIComponent(textId)}`;
+      //localStorage.setItem('bearer', "");
+      var bearer = localStorage.getItem('bearer');
+      console.log("bearer "+ bearer)
       const requestData = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+bearer,
         },
         //body: JSON.stringify({
         //  text_id: textId,
@@ -123,11 +151,12 @@
 
       const searchText = document.getElementById('search').value;
 
-      const apiUrl = `http://127.0.0.1:8000/v1.0/text?text_id=${encodeURIComponent(searchText)}`; // Replace with your API endpoint
+      const apiUrl = `http://127.0.0.1:8012/v1.0/text?text_id=${encodeURIComponent(searchText)}`; // Replace with your API endpoint
       const requestData = {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer '+bearer,
         },
       };
 

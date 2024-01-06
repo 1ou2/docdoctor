@@ -86,6 +86,9 @@
     // Function to handle the Text ID form submission (POST request)
     document.getElementById('LoginForm').addEventListener('submit', function (event) {
         event.preventDefault();
+        var bearer = localStorage.getItem('bearer');;
+        //localStorage.setItem('bearer', "");
+        
         const form = document.getElementById('LoginForm');
         const data = new FormData(form);
         //console.log(Array.from(data));
