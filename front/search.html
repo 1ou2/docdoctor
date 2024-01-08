@@ -6,7 +6,11 @@
   <link rel="stylesheet" href="techstyle.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <title>Doc Doctor</title>
-  <script language="javascript" type="text/javascript" src="script.js"></script>
+  <!--
+  <script language="javascript" type="text/javascript" src="./menv.js"></script> 
+-->
+  <script language="javascript" type="text/javascript" src="./script.js"></script>
+  
   <style>
     /* Add a new style block for additional styling */
     .form-container {
@@ -56,8 +60,8 @@
   </nav>
 
   <div class="container main-content">
-    <h2>Welcome to Your Tech Website</h2>
-    <p>This is a sample text for your main content. You can provide information about your tech-related services, products, or any other relevant content here.</p>
+    <h2>Welcome to Doc Doctor - your document assistant</h2>
+    <p>Search either by text ID or by text.</p>
 
     <!-- Form for Text ID with POST action -->
     <div class="form-container">
@@ -87,102 +91,20 @@
       <p>&copy; 2024 Doctor Your doc assistant. All rights reserved.</p>
       <div id="bearer">
         <script type="text/javascript">
-          var bearer = localStorage.getItem('bearer');
-          bearercontainer = document.getElementById('bearer');
-          if (bearer === null || bearer.length == 0) {
-            bearercontainer.textContent = "Bearer - Not set";
-            bearercontainer.innerHTML += "<form id='bearerform'><input type = 'text' id='newbearer'></form>";
-          }
-          else {
-            bearercontainer.textContent = "Bearer is set " ;          
-          }
+          checkBearer();
        </script>
       </div>
     </div>
   </footer>
   <script>
-    document.getElementById('bearerform').addEventListener('submit', function (event) {
-      event.preventDefault();
-      const bearerid = document.getElementById('newbearer').value;
-      console.log("new bearer "+ bearerid);
-      localStorage.setItem('bearer',bearerid);
-      
-    });
+    submitBearer();
   </script>
             
   </script>
   <!-- Include JavaScript -->
   <script>
-    // Function to handle the Text ID form submission (POST request)
-    document.getElementById('textIdForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const textId = document.getElementById('text_id').value;
-
-      const apiUrl = `http://127.0.0.1:8012/v1.0/text/${encodeURIComponent(textId)}`;
-      //localStorage.setItem('bearer', "");
-      var bearer = localStorage.getItem('bearer');
-      console.log("bearer "+ bearer)
-      const requestData = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer '+bearer,
-        },
-        //body: JSON.stringify({
-        //  text_id: textId,
-        //}),
-      };
-
-      fetch(apiUrl, requestData)
-        .then(response => response.json())
-        .then(data => {
-          displayResponse(data);
-        })
-        .catch(error => {
-          displayResponse({ error: 'Failed to fetch data' });
-          console.error('GET Error:', error);
-        });
-    });
-
-    // Function to handle the Search form submission (GET request)
-    document.getElementById('searchForm').addEventListener('submit', function (event) {
-      event.preventDefault();
-
-      const searchText = document.getElementById('search').value;
-
-      const apiUrl = `http://127.0.0.1:8012/v1.0/text?text_id=${encodeURIComponent(searchText)}`; // Replace with your API endpoint
-      const requestData = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer '+bearer,
-        },
-      };
-
-      fetch(apiUrl, requestData)
-        .then(response => response.json())
-        .then(data => {
-          displayResponse(data);
-        })
-        .catch(error => {
-          displayResponse({ error: 'Failed to fetch data' });
-          console.error('GET Error:', error);
-        });
-    });
-
-    // Function to display the API response
-    function displayResponse(data) {
-      const responseContainer = document.getElementById('responseContainer');
-      if (data && data.text) {
-        const responseValue = data.text;
-        responseContainer.textContent = responseValue;
-      } else {
-        responseContainer.textContent = 'Invalid or missing response data';
-        }
-      //responseContainer.innerHTML = JSON.stringify(data, null, 2);
-      responseContainer.style.display = 'block'; // Show the response container
-    }
+    searchByID();
+    searchByText();
   </script>
 </body>
 </html>
