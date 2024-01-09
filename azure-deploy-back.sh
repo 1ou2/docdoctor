@@ -2,15 +2,17 @@ source azure.env
 
 # prepare packages
 ZIP_FILES="app/ requirements.txt .deployment chk.json"
-APP_FILES="app/server.py app/embeddingDB.py"
+CACHE_FILES="app/__pycache__ app/util/__pycache__  app/routers/__pycache__"
 ROOT_FILES="requirements.txt .deployment chk.json"
-rm -rf dist
-mkdir -p dist/app
-cp $APP_FILES dist/app
 
+rm -rf dist
+mkdir -p dist
+cp -r app dist/app
 cp $ROOT_FILES dist
+
 cd dist
-rm -f ./src.zip 2> /dev/null && zip src.zip $ROOT_FILES $APP_FILES
+rm -rf $CACHE_FILES
+rm -f ./src.zip 2> /dev/null && zip src.zip -r $ZIP_FILES
 
 echo "login using service principal"
 az login --service-principal --username $AZ_SERVICEPRINCIPAL_APPID --password $AZ_SERVICEPRINCIPAL_PASSWORD --tenant $AZ_TENANTID
