@@ -90,13 +90,24 @@ class EmbeddingDB:
             self.df = pd.read_csv(filename)
         else:
             raise Exception(f"unknown format for file {filename}")
-        
-    def filter(self, query_embedding,max_result=10):
+    
+    # filter database and returns top similar documents
+    #
+    # query : text to search similarity
+    # max_result : number of results returned
+    #
+    # returns an array : [(TEXT_ID, TEXT, SIMILARITY]
+    def get_similar(self, query,max_result=10):
+        # compute embedding of the query
+        query_embedding = self.client.embeddings.create(input = [query], model="textembedding").data[0].embedding
+
         result = [
-            (row["text"], self.cosine_similarity(query_embedding,row["embedding"]))
+            {"text_id":i,"text":row["text"], "similarity":self.cosine_similarity(query_embedding,row["embedding"])}
             for i, row in self.df.iterrows()         
         ]
-        result.sort(key=lambda x:x[1],reverse=True)
+        # sort result by cosine similarity
+        result.sort(key=lambda x:x["similarity"],reverse=True)
+        # only return max_result items
         return result[:max_result]
     
     def get_text(self,id):
@@ -112,13 +123,18 @@ if __name__ == "__main__":
     loaddir = args.load
     datafile = args.read
     
-    edb = EmbeddingDB(False)
+    edb = EmbeddingDB(True)
     
     if args.load:
         edb.load(loaddir)
         edb.write(loaddir +".json")
     elif args.read:
         edb.read(datafile)
-        for i in range (3,10):
-            print(f"ID {i}: "+ edb.get_text(i))
+        #for i in range (3,10):
+        #    print(f"ID {i}: "+ edb.get_text(i))
+        res = edb.get_similar("MLops",5)
+        #print(res)
+        for r in res:
+            #print(f"{r[0]} --- {r[1][:10]} --- {r[2]}")
+            print(f"{r['text_id']} --- {r['similarity']}")
     
