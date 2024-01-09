@@ -14,11 +14,13 @@ async def getid(text_id: int):
     return {"text_id": text_id}
 
 @router.post("/text/similar")
+async def similarity_post(t:str):
+    result = db.get_similar(t)
+    return result
+
 @router.get("/text/similar")
 async def similarity(t: str):
     result = db.get_similar(t)
-    print(result)
-    
     return result[0]
 
 
