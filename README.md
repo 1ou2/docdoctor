@@ -18,6 +18,11 @@ AZURE_OPENAI_ENDPOINT="https://my.domain.com/"
 https://cookbook.openai.com/examples/question_answering_using_embeddings
 https://levelup.gitconnected.com/building-a-website-starter-with-fastapi-92d077092864
 
+Chat gpt web components :
+- https://emma-delaney.medium.com/how-to-create-your-own-chatgpt-in-html-css-and-javascript-78e32b70b4be
+- https://codeshack.io/build-ai-powered-chatbot-openai-chatgpt-javascript/
+- https://www.codingnepalweb.com/create-chatgpt-clone-html-css-javascript/
+
 # sample data
 embeddings_path = "https://cdn.openai.com/API/examples/data/winter_olympics_2022.csv"
 
