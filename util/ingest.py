@@ -2,15 +2,23 @@ import os,argparse, glob
 import tiktoken
 from openai import AzureOpenAI
 from dotenv import load_dotenv
+import pandas as pd
 # Ingest documentation and create a vector database
 
 class Ingester:
-    def __init__(self,directory) -> None:
+    # directory : source directory where files are located
+    # dbname = database name
+    def __init__(self,directory,dbname="db.json") -> None:
         self.sourcedir = directory
         self.currentid = 0
+        # name of the database file
+        self.dbname = dbname
         self.logs = {"txt":[],"pdf":[],"other":[]}
         self.data = []
+        # openai handler
         self.openai = False
+        self.init_openai(True)
+        # dataframe object
         self.df = None
 
     def init_openai(self,init):
@@ -26,9 +34,9 @@ class Ingester:
 
     def add_data(self, text:str, tags:list,pathname:str):
         # compute embedding for this text
-        #embedding = self.client.embeddings.create(input = [text], model="textembedding").data[0].embedding
+        embedding = self.openai.embeddings.create(input = [text], model="textembedding").data[0].embedding
         tokens = self.num_tokens_from_string(text)
-        embedding = 0
+       
         row = {"id": self.currentid,"text":text,"tags":tags,"embedding": embedding,"tokens":tokens,"path":pathname}
         self.currentid = self.currentid +1
         self.data.append(row)
@@ -64,16 +72,16 @@ class Ingester:
                 fullpath = os.path.join(root,f)
                 if f.lower().endswith(".txt"):
                     self.logs["txt"].append(fullpath)
-                    self.load_doc(fullpath)
+                    self.add_doc(fullpath)
                 elif f.lower().endswith(".pdf"):
                     self.logs["pdf"].append(fullpath)
                 else:
                     self.logs["other"].append(fullpath)
                     
 
-
-            
-
+    def write(self):
+        self.df = pd.DataFrame(self.data)
+        self.df.to_json(self.dbname)            
 
     
 
@@ -85,7 +93,8 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     srcdir = args.srcdir
-    
-    ing = Ingester(srcdir)
+    dbname = args.output
+    ing = Ingester(srcdir,dbname)
     ing.walk()
-    print(len(ing.logs["txt"]))
+    
+    ing.write()

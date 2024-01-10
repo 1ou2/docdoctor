@@ -1,6 +1,6 @@
 import argparse
-from app.embeddingDB import EmbeddingDB
-from util.search import Query
+from embeddingDB import EmbeddingDB
+from search import Query
 
 if __name__ == "__main__":
 
@@ -11,16 +11,25 @@ if __name__ == "__main__":
     datafile = args.datafile
     
     #ask = input("Votre requête:")
-    ask = "Qu’est ce que l’apprentissage non supervisé ?"
+    ask = "quels est la politique salariale d’orange"
 
     edb = EmbeddingDB()
     edb.read(datafile)
     
+
+    res = edb.get_similar(ask,max_result=3)
+    context = ""
+    for r in res:
+        print(f"score: {r['similarity']}")
+        if float(r['similarity']) > 0.8:
+            context = context + r['text']
     q = Query()
-    emb = q.generate_embeddings(ask)
-    res = edb.filter(emb)
-    for (t,s) in res:
-        print("-----")
-        print(f"score : {s}")
-        print(t)
+    response = q.answer(ask,context)
+    print(response)
+    for r in res:
+        print(f"score: {r['similarity']}")
+    
+
+    
+        
 

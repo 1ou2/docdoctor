@@ -35,12 +35,27 @@ class Query:
     def cosine_similarity(self, a, b):
         return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
     
-    def ask(self, query):
+    def answer(self, query, context):
+        context_query = f"""
+<CONTEXTE>
+{context}
+</CONTEXTE>
+
+<REQUETE>
+{query}
+</REQUETE>
+"""
+        print(context_query)
+
+        systemprompt = """Vous êtes un assistant de support informatique. 
+        En utilisant les données fournies en contexte, répondez en français à la requête de l’utilisateur. 
+        Si vous avez besoin d’informations complémentaires demandez-les.
+"""
         response = self.client.chat.completions.create(
         model = self.deployment_name,
         messages=[
-            {"role": "system", "content": "You are an AI assitant. Based on the information provided between triple backquotes, answer the query."},        
-            {"role": "user", "content": query}
+            {"role": "system", "content": systemprompt},        
+            {"role": "user", "content": context_query}
         ]
         )
         return response.choices[0].message.content
