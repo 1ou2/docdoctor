@@ -7,12 +7,12 @@ import pandas as pd
 
 class Ingester:
     # directory : source directory where files are located
-    # dbname = database name
-    def __init__(self,directory,dbname="db.json") -> None:
+    # 
+    def __init__(self,directory="",filepath:str="") -> None:
         self.sourcedir = directory
+        self.filepath = filepath
         self.currentid = 0
-        # name of the database file
-        self.dbname = dbname
+        
         self.logs = {"txt":[],"pdf":[],"other":[]}
         self.data = []
         # openai handler
@@ -48,20 +48,18 @@ class Ingester:
         return num_tokens
     
     def add_doc(self,path:str):
+        text = path + "\r\n"
+        tags = path.split('/')
+        tags.append("text")
         if path.lower().endswith(".txt"):
             with open(path,'r') as f:
-                text = path + "\r\n"
                 text = text + f.read()
         tokens = self.num_tokens_from_string(text)
-        if tokens < 8192:
-            tags = path.split('/')
-            tags.append("text")
-            self.add_data(text,tags,pathname=path)
-        else:
-            nbchunks = int(tokens / 8182) + 1
-            raise Exception(f"Token exception text too long, nb tokens = {tokens}")
-
-
+        nbchunks = int(tokens // 8182) +1
+        chunks, chunk_size = len(text), len(text)//nbchunks
+        text_list = [ text[i:i+chunk_size] for i in range(0, chunks, chunk_size) ]
+        for t in text_list:
+            self.add_data(t,tags,pathname=path)
     
     def load_doc(self,path:str,tags:dict):
         pass
@@ -79,22 +77,33 @@ class Ingester:
                     self.logs["other"].append(fullpath)
                     
 
-    def write(self):
+    def write(self,dbname):
         self.df = pd.DataFrame(self.data)
-        self.df.to_json(self.dbname)            
+        self.df.to_json(dbname)            
 
     
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Ingest documents")
-    parser.add_argument("-d","--srcdir",help="Source directory where document files are stored",default="docs")
-    parser.add_argument("-o","--output",help="Output database file",default="db.json")
+    parser.add_argument("-d","--srcdir",help="Source directory where document files are stored",default="")
+    parser.add_argument("-f","--file",help="file to ingest",default="")
+    parser.add_argument("-o","--output",help="Output database file",default="")
     
     args = parser.parse_args()
     srcdir = args.srcdir
+    filepath = args.file
     dbname = args.output
-    ing = Ingester(srcdir,dbname)
-    ing.walk()
-    
-    ing.write()
+    print(f"ARGS : {srcdir} - {filepath} - {dbname}")
+    if srcdir:
+        ing = Ingester(directory=srcdir)
+        ing.walk()
+    elif filepath:
+        ing = Ingester(filepath=filepath)
+        ing.add_doc(filepath)
+    else:
+        raise Exception("please enter directory or file name")
+    if dbname:
+        ing.write(dbname)
+    else:
+        print(ing.data)

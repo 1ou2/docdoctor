@@ -5,9 +5,10 @@ from ..util.embeddingDB import EmbeddingDB
 from ..util.search import Query
 from ..util.bearer import verify, Token
 from pydantic import BaseModel
+from .db import DB
 
-db = EmbeddingDB(init_openai=True)
-db.read("chk.json")
+#db = EmbeddingDB(init_openai=True)
+#db.read("chk.json")
 
 
 class Question(BaseModel):
@@ -23,14 +24,14 @@ async def getid(text_id: int):
 @router.post("/text/similar")
 async def similarity_post(q:Question):
     
-    res = db.get_similar(q.question,q.max_result)
+    res = DB.get_similar(q.question,q.max_result)
     
     return {"responses":res}
 
 @router.post("/text/ask")
 async def similarity_post(q:Question):
     
-    res = db.get_similar(q.question,q.max_result)
+    res = DB.get_similar(q.question,q.max_result)
     context = ""
     for r in res:
         print(f"score: {r['similarity']}")
@@ -42,11 +43,11 @@ async def similarity_post(q:Question):
 
 @router.get("/text/similar")
 async def similarity(t: str):
-    result = db.get_similar(t)
+    result = DB.get_similar(t)
     return result[0]
 
 
 @router.get("/text/{text_id}")
 async def read_text(text_id: int):
-    return {"id":text_id,"text": db.get_text(text_id)}
+    return {"id":text_id,"text": DB.get_text(text_id)}
 

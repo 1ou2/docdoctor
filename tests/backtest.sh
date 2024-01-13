@@ -1,6 +1,6 @@
 source .env
 # text retrieval by text ID
-#curl $BACK/v1.0/text/12 -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json"
+#curl $BACK/v1.0/text/3 -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json"
 
 # get similar text
 # 
@@ -12,5 +12,12 @@ max_res=3
 #curl $BACK/v1.0/text/similar -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json" \
 #-d '{"question":"'"$question"'","max_result": '"$max_res"'}'
 
-curl $BACK/v1.0/text/ask -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json" \
--d '{"question":"'"$question"'","max_result": '"$max_res"'}'
+#curl $BACK/v1.0/text/ask -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json" \
+#-d '{"question":"'"$question"'","max_result": '"$max_res"'}'
+
+echo "\n*** DESCRIBE ***\n"
+curl $BACK/v1.0/db/describe -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json" 
+
+#curl $BACK/v1.0/db/load -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json" \
+#-d '{"name":"db2.json"}'
+#curl $BACK/v1.0/text/3 -H "Authorization: Bearer $SECURED_TOKEN" -H "Content-Type: application/json"

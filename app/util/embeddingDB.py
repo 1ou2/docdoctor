@@ -4,7 +4,7 @@ import tiktoken
 from openai import AzureOpenAI
 from dotenv import load_dotenv
 import numpy as np
-
+from pathlib import Path
 
 #
 # Embedding DB : a database storing embedding of text
@@ -30,6 +30,8 @@ class EmbeddingDB:
         self.chunkdir = None
         # dataframe
         self.df = None
+        # database name
+        self.dbname = ""
         self.init_openai(init_openai)
 
     def init_openai(self,init):
@@ -84,6 +86,8 @@ class EmbeddingDB:
             raise Exception(f"unknown format {filename}")
         
     def read(self,filename:str):
+        self.dbname = Path(filename).stem
+        
         if filename.endswith(".json"):
             self.df = pd.read_json(filename)
         elif filename.endswith(".csv"):
@@ -102,7 +106,7 @@ class EmbeddingDB:
         query_embedding = self.client.embeddings.create(input = [query], model="textembedding").data[0].embedding
 
         result = [
-            {"text_id":i,"text":row["text"], "similarity":self.cosine_similarity(query_embedding,row["embedding"])}
+            {"id":i,"text":row["text"], "similarity":self.cosine_similarity(query_embedding,row["embedding"])}
             for i, row in self.df.iterrows()         
         ]
         # sort result by cosine similarity
@@ -113,6 +117,18 @@ class EmbeddingDB:
     def get_text(self,id):
         return self.df.iloc[id]["text"]
     
+    def _describe(self,df):
+        print("HEAD\n")
+        print(df.head())
+        print("COLUMNS\n")
+        # iterating the columns
+        for col in df.columns:
+            print(col)
+
+        print(f"\nNB ROWS: {len(df)}\n")
+        end = len(df)
+
+        print(f"LAST ELEM:\n{df.loc[end-1]}\n")
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Generate embedding database from a list of files")
@@ -130,11 +146,10 @@ if __name__ == "__main__":
         edb.write(loaddir +".json")
     elif args.read:
         edb.read(datafile)
-        #for i in range (3,10):
-        #    print(f"ID {i}: "+ edb.get_text(i))
-        res = edb.get_similar("MLops",5)
-        #print(res)
-        for r in res:
-            #print(f"{r[0]} --- {r[1][:10]} --- {r[2]}")
-            print(f"{r['text_id']} --- {r['similarity']}")
+
+       
+        edb._describe(edb.df)
+        iadf = pd.read_json("chk.json")
+        edb._describe(iadf)
+
     

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
-from .routers import text,user
+from .routers import text,user,db
 
 
 
@@ -17,6 +17,7 @@ from .routers import text,user
 app = FastAPI()
 app.include_router(text.router)
 app.include_router(user.router)
+app.include_router(db.router)
 
 origins = [
     "http://127.0.0.1",
