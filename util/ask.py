@@ -20,14 +20,14 @@ if __name__ == "__main__":
     res = edb.get_similar(ask,max_result=3)
     context = ""
     for r in res:
-        print(f"score: {r['similarity']}")
+        print(f"score: {r['similarity']}")
         if float(r['similarity']) > 0.8:
             context = context + r['text']
     q = Query()
     response = q.answer(ask,context)
     print(response)
     for r in res:
-        print(f"score: {r['similarity']}")
+        print(f"score: {r['similarity']}")
     
 
     
