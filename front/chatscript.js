@@ -353,8 +353,8 @@ class ChatAI {
     _welcomePageTemplate() {
         return `
             <div class="welcome">
-                <h1>ChatAI<span class="ver">${this.options.version}</span></h1>                    
-                <p>Made with love by <a href="https://codeshack.io" target="_blank">CodeShack</a> &lt;3</p>
+                <h1>Doc Doctor<span class="ver">${this.options.version}</span></h1>                    
+                <p>Your Document assistant</p>
                 <a href="#" class="open-database"><i class="fa-regular fa-folder-open"></i>Open Database...</a>
             </div>
         `;
