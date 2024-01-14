@@ -3,6 +3,7 @@ import tiktoken
 from openai import AzureOpenAI
 from dotenv import load_dotenv
 import pandas as pd
+from pypdf import PdfReader
 # Ingest documentation and create a vector database
 
 class Ingester:
@@ -47,13 +48,29 @@ class Ingester:
         num_tokens = len(encoding.encode(string))
         return num_tokens
     
+    def get_pdf_text(self,pdf_file:str):
+        reader = PdfReader(pdf_file)
+        #nb_pages = len(reader.pages)
+        #print(f"file: {pdf_file} nb pages: {nb_pages}")
+        text = ""
+        pages = []
+        for i in range(len(reader.pages)):
+            page = reader.pages[i]
+            text = text + page.extract_text()
+            
+        return text
+    
     def add_doc(self,path:str):
-        text = path + "\r\n"
         tags = path.split('/')
         tags.append("text")
         if path.lower().endswith(".txt"):
             with open(path,'r') as f:
                 text = text + f.read()
+        elif path.lower().endswith(".pdf"):
+            text = self.get_pdf_text(path)
+        else:
+            raise Exception(f"unsupported file format for file {os.path.basename(path)}")
+        text = path + "\r\n" + text
         tokens = self.num_tokens_from_string(text)
         nbchunks = int(tokens // 8182) +1
         chunks, chunk_size = len(text), len(text)//nbchunks
