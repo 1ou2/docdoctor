@@ -7,12 +7,15 @@ function checkBearer() {
     var bearer = localStorage.getItem('bearer');
     bearercontainer = document.getElementById('bearer');
     if (bearer === null || bearer.length == 0) {
-    bearercontainer.textContent = "Bearer - Not set";
-    bearercontainer.innerHTML += "<form id='bearerform'><input type = 'text' id='newbearer'></form>";
+      
+      bearercontainer.textContent = "Bearer is NOT set. Please enter Bearer.";
+      bearercontainer.innerHTML += "<form id='bearerform'><input type = 'text' id='newbearer'> <input type = 'submit' label='send' value='send'></input> </form>";
+      submitBearer();
     }
     else {
-    bearercontainer.textContent = "Bearer is set " + APP_SERVER ;          
+      bearercontainer.innerHTML = "<p>Bearer is set.</p> <p>Server : <a href='" + APP_SERVER + "'</a>" + APP_SERVER +"</p>";          
     }
+    
 }
 
 // Function to display the API response

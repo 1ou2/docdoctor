@@ -3,64 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="techstyle.css">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+
   <title>Doc Doctor</title>
-  <!--
-  <script language="javascript" type="text/javascript" src="./menv.js"></script> 
--->
   <script language="javascript" type="text/javascript" src="./script.js"></script>
-  
-  <style>
-    /* Add a new style block for additional styling */
-    .form-container {
-      max-width: 400px;
-      margin: 0 auto;
-    }
 
-    form {
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
-
-    /* Adjust responsiveness for smaller screens */
-    @media screen and (max-width: 600px) {
-      .form-container {
-        width: 80%;
-      }
-    }
-  </style>
 </head>
 <body>
 
   <header>
-    <div class="container">
-      <h1>Your Tech Website</h1>
-    </div>
+
+      <h1>Doc Doctor</h1>
+      <nav>
+        
+          <a href="index.html" class="nav-link">Home</a>
+          <a href="#" class="nav-link">Search</a>
+          <a href="chat.html" class="nav-link">Chat</a>
+          <a href="#" class="nav-link">Contact</a>
+        
+      </nav>
   </header>
 
-  <nav>
-    <div class="container">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="#" class="nav-link">About</a>
-      <a href="#" class="nav-link">Services</a>
-      <a href="#" class="nav-link">Contact</a>
-    </div>
-  </nav>
+  
 
   <div class="container main-content">
-    <h2>Welcome to Doc Doctor - your document assistant</h2>
+    <h2>Search</h2>
     <p>Search either by text ID or by text.</p>
 
     <!-- Form for Text ID with POST action -->
@@ -82,13 +49,14 @@
     </div>
 
     <!-- Response container -->
-    <div id="responseContainer"></div>
-
+    <div id="responseContainer" class="notice"></div>
+    <script type="text/javascript">const responseContainer = document.getElementById('responseContainer');
+    responseContainer.style.display='None';</script>
   </div>
 
   <footer>
     <div class="container">
-      <p>&copy; 2024 Doctor Your doc assistant. All rights reserved.</p>
+      &copy; 2024 Doc Doctor Your doc assistant. All rights reserved.
       <div id="bearer">
         <script type="text/javascript">
           checkBearer();
@@ -100,7 +68,6 @@
     submitBearer();
   </script>
             
-  </script>
   <!-- Include JavaScript -->
   <script>
     searchByID();
