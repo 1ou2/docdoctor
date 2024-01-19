@@ -18,7 +18,7 @@
         
           <a href="index.html" class="nav-link">Home</a>
           <a href="#" class="nav-link">Search</a>
-          <a href="chat.html" class="nav-link">Chat</a>
+          <a href="ask.html" class="nav-link">Ask</a>
           <a href="manage.html" class="nav-link">Manage</a>
         
       </nav>
@@ -39,15 +39,7 @@
       </form>
     </div>
 
-    <!-- Form for Search with GET action -->
-    <div class="form-container">
-      <form id="searchForm">
-        <label for="search">Enter query:</label>
-        <input type="text" id="search" name="search" placeholder="Search query" required>
-        <button type="submit">Search</button>
-      </form>
-    </div>
-
+    
     <!-- Response container -->
     <div id="responseContainer" class="notice"></div>
     <script type="text/javascript">const responseContainer = document.getElementById('responseContainer');
@@ -57,16 +49,11 @@
   <footer>
     <div class="container">
       &copy; 2024 Doc Doctor Your doc assistant. All rights reserved.
-      <div id="bearer">
-        <script type="text/javascript">
-          checkBearer();
-       </script>
+    
       </div>
     </div>
   </footer>
-  <script>
-    submitBearer();
-  </script>
+  
             
   <!-- Include JavaScript -->
   <script>

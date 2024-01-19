@@ -11,10 +11,27 @@ from dotenv import load_dotenv
 import os
 from .routers import text,user,db
 
-
-
-
 app = FastAPI()
+# DEBUG
+""" 
+from fastapi.exception_handlers import (
+    http_exception_handler,
+    request_validation_exception_handler,
+)
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+@app.exception_handler(StarletteHTTPException)
+async def custom_http_exception_handler(request, exc):
+    print(f"OMG! An HTTP error!: {repr(exc)}")
+    return await http_exception_handler(request, exc)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    print(f"OMG! The client sent invalid data!: {exc}")
+    return await request_validation_exception_handler(request, exc)
+"""
+
 app.include_router(text.router)
 app.include_router(user.router)
 app.include_router(db.router)

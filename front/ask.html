@@ -18,7 +18,7 @@
         
           <a href="index.html" class="nav-link">Home</a>
           <a href="search.html" class="nav-link">Search</a>
-          <a href="ask.html" class="nav-link">Ask</a>
+          <a href="#" class="nav-link">Ask</a>
           <a href="manage.html" class="nav-link">Manage</a>
         
       </nav>
@@ -26,44 +26,36 @@
 
   
 
-  
-    <h2>Manage</h2>
-    <p>Upload document.</p>
-
-    <!-- Form for Text ID with POST action -->
+  <div class="container main-content">
+    <h2>Ask your question</h2>
+    
+    <!-- Form for Search with GET action -->
     <div class="form-container">
-      <form id="uploadForm">
-        <label for="docfile">Choose File:</label>
-        <input type="file" id="docfile" name="docfile"  required>
-        <button type="submit">Upload File</button>
+      <form id="searchForm">
+        <label for="search">Enter your question:</label>
+        <input type="text" id="search" name="search" placeholder="Search query" size="50"required>
+        <button type="submit">Ask</button>
       </form>
     </div>
-
-    
 
     <!-- Response container -->
     <div id="responseContainer" class="notice"></div>
     <script type="text/javascript">const responseContainer = document.getElementById('responseContainer');
     responseContainer.style.display='None';</script>
-
+  </div>
 
   <footer>
     <div class="container">
       &copy; 2024 Doc Doctor Your doc assistant. All rights reserved.
-      <div id="bearer">
-        <script type="text/javascript">
-          checkBearer();
-       </script>
+      
       </div>
     </div>
   </footer>
-  <script>
-    submitBearer();
-  </script>
+
             
   <!-- Include JavaScript -->
   <script>
-    searchByID();
+    //searchByID();
     searchByText();
   </script>
 </body>

@@ -1,26 +1,25 @@
-//import { APP_SERVER  } from './menv';
 
-//APP_SERVER = "http://127.0.0.1:8012";
-APP_SERVER="https://wa-gabai.azurewebsites.net/"
+APP_SERVER = "http://127.0.0.1:8012";
+//APP_SERVER="https://wa-gabai.azurewebsites.net/"
 
-function checkBearer() {
-    var bearer = localStorage.getItem('bearer');
-    bearercontainer = document.getElementById('bearer');
-    if (bearer === null || bearer.length == 0) {
-      
-      bearercontainer.textContent = "Bearer is NOT set. Please enter Bearer.";
-      bearercontainer.innerHTML += "<form id='bearerform'><input type = 'text' id='newbearer'> <input type = 'submit' label='send' value='send'></input> </form>";
-      submitBearer();
-    }
-    else {
-      bearercontainer.innerHTML = "<p>Bearer is set.</p> <p>Server : <a href='" + APP_SERVER + "'</a>" + APP_SERVER +"</p>";          
-    }
-    
-}
 
 // Function to display the API response
-function displayResponse(data) {
+function displayError(data) {
+  const responseContainer = document.getElementById('responseContainer');
+  console.log(data);
+  if (data && data.error) {
+    const responseValue = data.error;
+    responseContainer.textContent = responseValue;
+  } else {
+    responseContainer.textContent = 'Invalid or missing response data';
+    }
+  //responseContainer.innerHTML = JSON.stringify(data, null, 2);
+  responseContainer.style.display = 'block'; // Show the response container
+}
+// Function to display the API response
+function displayText(data) {
     const responseContainer = document.getElementById('responseContainer');
+    console.log(data);
     if (data && data.text) {
       const responseValue = data.text;
       responseContainer.textContent = responseValue;
@@ -31,16 +30,20 @@ function displayResponse(data) {
     responseContainer.style.display = 'block'; // Show the response container
   }
 
-  // 
-  function submitBearer() {
-    document.getElementById('bearerform').addEventListener('submit', function (event) {
-        event.preventDefault();
-        const bearerid = document.getElementById('newbearer').value;
-        console.log("new bearer "+ bearerid);
-        localStorage.setItem('bearer',bearerid);
-        
-    });
-  }
+  // Function to display the API response
+function displayResponse(data) {
+  const responseContainer = document.getElementById('responseContainer');
+  console.log(data);
+  if (data && data.response) {
+    const responseValue = data.response;
+    responseContainer.textContent = responseValue;
+  } else {
+    responseContainer.textContent = 'Invalid or missing response data';
+    }
+  //responseContainer.innerHTML = JSON.stringify(data, null, 2);
+  responseContainer.style.display = 'block'; // Show the response container
+}
+  
 
   function searchByID() {
     // Function to handle the Text ID form submission (POST request)
@@ -52,7 +55,6 @@ function displayResponse(data) {
         const apiUrl = APP_SERVER + `/v1.0/text/${encodeURIComponent(textId)}`;
         //localStorage.setItem('bearer', "");
         var bearer = localStorage.getItem('bearer');
-        console.log("bearer "+ bearer)
         const requestData = {
           method: 'GET',
           headers: {
@@ -67,10 +69,10 @@ function displayResponse(data) {
         fetch(apiUrl, requestData)
           .then(response => response.json())
           .then(data => {
-            displayResponse(data);
+            displayText(data);
           })
           .catch(error => {
-            displayResponse({ error: 'Failed to fetch data' });
+            displayError({ error: 'Failed to fetch data' });
             console.error('GET Error:', error);
           });
       });
@@ -80,16 +82,19 @@ function displayResponse(data) {
     // Function to handle the Search form submission (GET request)
     document.getElementById('searchForm').addEventListener('submit', function (event) {
         event.preventDefault();
-  
+        var bearer = localStorage.getItem('bearer');
         const searchText = document.getElementById('search').value;
   
-        const apiUrl = APP_SERVER+ `/v1.0/text?text_id=${encodeURIComponent(searchText)}`; 
+        const apiUrl = APP_SERVER+ `/v1.0/text/ask`; 
         const requestData = {
-          method: 'GET',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer '+bearer,
           },
+          body: JSON.stringify({
+            "question": searchText,
+            "max_result":"1"}),
         };
   
         fetch(apiUrl, requestData)
@@ -99,7 +104,7 @@ function displayResponse(data) {
           })
           .catch(error => {
             displayResponse({ error: 'Failed to fetch data' });
-            console.error('GET Error:', error);
+            console.error('POST Error:', error);
           });
       });
   }
