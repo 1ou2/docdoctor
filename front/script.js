@@ -1,6 +1,6 @@
 
-APP_SERVER = "http://127.0.0.1:8012";
-//APP_SERVER="https://wa-gabai.azurewebsites.net/"
+//APP_SERVER = "http://127.0.0.1:8012";
+APP_SERVER="https://wa-gabai.azurewebsites.net/"
 
 
 // Function to display the API response

@@ -1,9 +1,9 @@
 source azure.env
 
 # prepare packages
-ZIP_FILES="app/ requirements.txt .deployment chk.json"
+ZIP_FILES="app/ requirements.txt .deployment db2.json"
 CACHE_FILES="app/__pycache__ app/util/__pycache__  app/routers/__pycache__"
-ROOT_FILES="requirements.txt .deployment chk.json"
+ROOT_FILES="requirements.txt .deployment db2.json"
 
 rm -rf dist
 mkdir -p dist

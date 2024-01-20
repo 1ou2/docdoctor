@@ -72,7 +72,7 @@ To set a secret, go the webapp>configuration>application settings and create a n
 Secrets are retreivde using environment variables ```os.getenv["app_setting_name"]```
 
 # Frontend server
-# local storage
+## local storage
 Local storage is used to store the authentication bearer
 ```
 // Store data
@@ -85,3 +85,6 @@ var data = localStorage.getItem('myDataKey');
 // Remove data
 localStorage.removeItem('myDatakey');
 ```
+
+## Deploy frontend
+From docdoctor directory run ``` ./scripts/azure-deploy-front.sh ```
