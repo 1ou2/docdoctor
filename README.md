@@ -13,6 +13,7 @@ edit .env file with credentials
 ```AZURE_OPENAI_KEY="abcdef"
 AZURE_OPENAI_ENDPOINT="https://my.domain.com/"
 ```
+For authentication between frontend and backend use ```SECURED_TOKEN``` env
 
 # External links
 https://cookbook.openai.com/examples/question_answering_using_embeddings
@@ -36,7 +37,7 @@ Initial setup on azure :
 2. create a service principal, with ```azure-init-principal.sh``` script
 3. create blob storage for static website 
 ```
-chmod a+x azure-*.sh 
+chmod a+x scripts/*.sh 
 ./azure-init-front.sh
 ```
 Documentation 
@@ -45,13 +46,13 @@ Documentation
 
 # back-end server
 ## RUN Locally
-From terminal ```uvicorn app.server:app --reload```
+From terminal ```uvicorn app.server:app --host 0.0.0.0 --port 8012 --reload```
 - uvicorn : ASGI 
 - app.server : server.py python module located in app directory
 - :app -> app = FastAPI()
 - --reload : only in development mode
 Server can be accessed 
-http://127.0.0.1:8000
+http://127.0.0.1:8012
 
 ## Azure deployment
 Check logs ```az webapp log tail --name $AZ_WEBAPP_NAME --resource-group $AZ_RESOURCEGROUP ```
@@ -88,3 +89,8 @@ localStorage.removeItem('myDatakey');
 
 ## Deploy frontend
 From docdoctor directory run ``` ./scripts/azure-deploy-front.sh ```
+
+## RUN locally
+Due to CORS restrictions, it is recommended to launch a local webserver
+```# start local http server to test frontend server
+python3 -m http.server 8011 -d ./front```
